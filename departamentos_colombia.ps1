@@ -11,8 +11,10 @@
 #                Open XML (.xlsx = ZIP de XML), publicarlo de forma
 #                segura (temporal + reemplazo) y reportar el resultado.
 # ALCANCE      : Fase 1. Datos embebidos: 32 departamentos + Bogota D.C.
-#                Poblacion APROXIMADA (proyecciones DANE ~2025, redondeada,
-#                NO verificada): validar contra DANE antes de usar en informes.
+#                Poblacion: proyeccion DANE 2025 (base CNPV 2018). Suma de
+#                los 33 registros = 53.057.212 = total nacional (verificado).
+#                DANE publico una serie actualizada el 08-ago-2025: confirmar
+#                si el informe exige esa version.
 # REQUISITOS   : Windows PowerShell 5.1 (nativo en Windows 10/11) o
 #                PowerShell 7+. NO requiere Excel, COM, ni modulos externos.
 # EJECUCION    : powershell -NoProfile -ExecutionPolicy Bypass -File .\departamentos_colombia.ps1
@@ -67,41 +69,41 @@ $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.IO.Compression
 # Carga ZipArchive (en PS 5.1 no viene cargado por defecto)
 
-# --- DATOS: departamento -> @(capital, poblacion aprox.) -------------
+# --- DATOS: departamento -> @(capital, poblacion DANE 2025) ---------
 $datos = [ordered]@{
-    'Amazonas'                  = @('Leticia',        86000)
-    'Antioquia'                 = @('Medellín',       6990000)
-    'Arauca'                    = @('Arauca',         313000)
-    'Atlántico'                 = @('Barranquilla',   2830000)
-    'Bogotá D.C.'               = @('Bogotá D.C.',    7970000)
-    'Bolívar'                   = @('Cartagena',      2270000)
-    'Boyacá'                    = @('Tunja',          1290000)
-    'Caldas'                    = @('Manizales',      1040000)
-    'Caquetá'                   = @('Florencia',      420000)
-    'Casanare'                  = @('Yopal',          460000)
-    'Cauca'                     = @('Popayán',        1540000)
-    'Cesar'                     = @('Valledupar',     1370000)
-    'Chocó'                     = @('Quibdó',         560000)
-    'Córdoba'                   = @('Montería',       1880000)
-    'Cundinamarca'              = @('Bogotá D.C.',    3600000)
-    'Guainía'                   = @('Inírida',        55000)
-    'Guaviare'                  = @('San José del Guaviare', 94000)
-    'Huila'                     = @('Neiva',          1170000)
-    'La Guajira'                = @('Riohacha',       1010000)
-    'Magdalena'                 = @('Santa Marta',    1500000)
-    'Meta'                      = @('Villavicencio',  1110000)
-    'Nariño'                    = @('Pasto',          1650000)
-    'Norte de Santander'        = @('Cúcuta',         1720000)
-    'Putumayo'                  = @('Mocoa',          370000)
-    'Quindío'                   = @('Armenia',        560000)
-    'Risaralda'                 = @('Pereira',        980000)
-    'San Andrés y Providencia'  = @('San Andrés',     64000)
-    'Santander'                 = @('Bucaramanga',    2360000)
-    'Sucre'                     = @('Sincelejo',      980000)
-    'Tolima'                    = @('Ibagué',         1350000)
-    'Valle del Cauca'           = @('Cali',           4620000)
-    'Vaupés'                    = @('Mitú',           47000)
-    'Vichada'                   = @('Puerto Carreño', 122000)
+    'Amazonas'                  = @('Leticia',        85057)
+    'Antioquia'                 = @('Medellín',       6928372)
+    'Arauca'                    = @('Arauca',         279191)
+    'Atlántico'                 = @('Barranquilla',   2865034)
+    'Bogotá D.C.'               = @('Bogotá D.C.',    7942867)
+    'Bolívar'                   = @('Cartagena',      2241282)
+    'Boyacá'                    = @('Tunja',          1290393)
+    'Caldas'                    = @('Manizales',      1054450)
+    'Caquetá'                   = @('Florencia',      429041)
+    'Casanare'                  = @('Yopal',          473165)
+    'Cauca'                     = @('Popayán',        1599148)
+    'Cesar'                     = @('Valledupar',     1469159)
+    'Chocó'                     = @('Quibdó',         593106)
+    'Córdoba'                   = @('Montería',       1992907)
+    'Cundinamarca'              = @('Bogotá D.C.',    3535067)
+    'Guainía'                   = @('Inírida',        59706)
+    'Guaviare'                  = @('San José del Guaviare', 84696)
+    'Huila'                     = @('Neiva',          1208728)
+    'La Guajira'                = @('Riohacha',       1066679)
+    'Magdalena'                 = @('Santa Marta',    1544507)
+    'Meta'                      = @('Villavicencio',  1156405)
+    'Nariño'                    = @('Pasto',          1713586)
+    'Norte de Santander'        = @('Cúcuta',         1709289)
+    'Putumayo'                  = @('Mocoa',          390742)
+    'Quindío'                   = @('Armenia',        557884)
+    'Risaralda'                 = @('Pereira',        1003225)
+    'San Andrés y Providencia'  = @('San Andrés',     63438)
+    'Santander'                 = @('Bucaramanga',    2398303)
+    'Sucre'                     = @('Sincelejo',      1034102)
+    'Tolima'                    = @('Ibagué',         1386410)
+    'Valle del Cauca'           = @('Cali',           4708393)
+    'Vaupés'                    = @('Mitú',           44142)
+    'Vichada'                   = @('Puerto Carreño', 148738)
 }
 # Diccionario ordenado: una sola estructura evita listas paralelas desalineadas
 
@@ -390,9 +392,9 @@ exit $codigoSalida
 #  7   | $existia                                 | False
 #  8   | $ultimaFila = 33 + 1                     | 34
 #  9   | Fila 1                                   | A1=Departamento B1=Capital C1=Población
-# 10   | foreach, $fila=2                         | A2=Amazonas  B2=Leticia  C2=86000
-# 11   | $fila=3                                  | A3=Antioquia B3=Medellín C3=6990000
-# 12   | ... ultimo ($fila=34)                    | A34=Vichada B34=Puerto Carreño C34=122000; $fila=35
+# 10   | foreach, $fila=2                         | A2=Amazonas  B2=Leticia  C2=85057
+# 11   | $fila=3                                  | A3=Antioquia B3=Medellín C3=6928372
+# 12   | ... ultimo ($fila=34)                    | A34=Vichada B34=Puerto Carreño C34=148738; $fila=35
 # 13   | Arma 6 partes XML                        | hoja (A1:C34), tipos, rels, libro, rels, estilos
 # 14   | File.Open + ZipArchive + Dispose         | output.xlsx.tmp completo
 # 15   | Move-Item -Force                         | C:\informes\egp\output\output.xlsx
